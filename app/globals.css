@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: oklch(0.48 0.14 30);
+  --color-primary-hover: oklch(0.42 0.12 30);
+  --color-primary-fg: oklch(0.99 0.005 30);
+  --color-accent: oklch(0.88 0.08 60);
+  --color-accent-hover: oklch(0.83 0.09 60);
+  --color-accent-fg: oklch(0.25 0.03 60);
+  --color-bg: oklch(0.98 0.01 45);
+  --color-bg-secondary: oklch(0.94 0.02 45);
+  --color-fg: oklch(0.22 0.015 30);
+  --color-fg-muted: oklch(0.50 0.015 30);
+  --color-border: oklch(0.88 0.02 30);
+  --font-sans: var(--font-sans-var), "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-var), "Lora", ui-serif, Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+}
+
+::selection {
+  background: oklch(0.48 0.14 30 / 0.2);
+}
