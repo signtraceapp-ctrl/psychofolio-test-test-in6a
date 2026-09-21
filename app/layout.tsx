@@ -3,6 +3,7 @@ import { Source_Sans_3, Lora } from "next/font/google";
 import { getContent } from "@/lib/content";
 import Link from "next/link";
 import "./globals.css";
+import { generateJsonLd } from "@/lib/seo";
 
 const sourceSans = Source_Sans_3({
   subsets: ["latin", "latin-ext"],
@@ -19,10 +20,27 @@ const lora = Lora({
 
 export function generateMetadata(): Metadata {
   const c = getContent();
+  const seo = c.seo;
+  const siteUrl = seo?.siteUrl || "";
   return {
     title: { default: `${c.site.name} - ${c.site.title}`, template: `%s | ${c.site.name}` },
-    description: c.home.description,
-    robots: { index: false, follow: false },
+    description: seo?.description || c.home.description,
+    robots: { index: true, follow: true },
+    ...(siteUrl && {
+      metadataBase: new URL(siteUrl),
+      alternates: { canonical: siteUrl },
+      openGraph: {
+        type: "website",
+        title: `${c.site.name} - ${c.site.title}`,
+        description: seo?.description || c.home.description,
+        url: siteUrl,
+        siteName: c.site.name,
+      },
+    }),
+    other: {
+      "geo.region": "TR",
+      ...(seo?.location && { "geo.placename": seo.location }),
+    },
   };
 }
 
@@ -40,6 +58,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="tr" className={`${sourceSans.variable} ${lora.variable}`}>
       <body className="min-h-screen flex flex-col bg-bg text-fg antialiased">
+        {generateJsonLd().map((schema, i) => (
+          <script
+            key={i}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          />
+        ))}
         {/* Header */}
         <header className="sticky top-0 z-50 border-b border-border/60 bg-bg/80 backdrop-blur-md">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
